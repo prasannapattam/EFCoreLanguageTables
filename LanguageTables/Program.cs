@@ -18,6 +18,8 @@ namespace LanguageTables
                     Console.WriteLine("2 - English ");
                     Console.WriteLine("3 - Telugu ");
                     Console.WriteLine("4 - Arabic ");
+                    Console.WriteLine("5 - English as default ");
+                    Console.WriteLine("6 - Save the language ");
                     Console.WriteLine("0 - to quit the application");
                     firstTime = false;
                 }
@@ -44,6 +46,12 @@ namespace LanguageTables
                     case '4':
                         await GetEmployee("ar");
                         break;
+                    case '5':
+                        await GetEmployee("dx");
+                        break;
+                    case '6':
+                        await SaveEmployee("dx");
+                        break;
                     default:
                         Console.WriteLine();
                         Console.ForegroundColor = ConsoleColor.Red;
@@ -66,6 +74,21 @@ namespace LanguageTables
                 Console.WriteLine("Employee Name in default language: " + emp.Name);
                 if(emp.Language != null)
                     Console.WriteLine("Employee Name in chosen language: " + emp.Language.Name);
+            }
+        }
+
+        static async Task SaveEmployee(string culture)
+        {
+            using (FxRepository repository = new FxRepository(culture)) // using is used for disposing the context
+            {
+                EmployeeModel emp = await repository.GetEmployee();
+                //emp.Description = DateTime.Now.ToLongTimeString();
+                emp.Language.Name = DateTime.Now.ToShortTimeString();
+                emp.Name = emp.Language.Name;
+                await repository.SaveEmployee(emp);
+                Console.ForegroundColor = ConsoleColor.Blue;
+                Console.WriteLine();
+                Console.WriteLine("Employee updated");
             }
         }
     }

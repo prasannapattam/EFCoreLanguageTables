@@ -24,6 +24,7 @@ namespace LanguageTables
             {
                 t.ToTable("Employee");
                 t.HasKey("Id");
+                t.Property("Name").HasColumnName("Name");
             });
 
             Console.WriteLine();

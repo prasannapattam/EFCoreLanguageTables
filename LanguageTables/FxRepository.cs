@@ -37,5 +37,11 @@ namespace LanguageTables
                 return await dbContext.Set<EmployeeModel>().Include(e => e.Language).Where(e => e.Id == 1).FirstAsync();
             }
         }
+
+        public async Task SaveEmployee(EmployeeModel employee)
+        {
+            dbContext.Update(employee);
+            await dbContext.SaveChangesAsync();
+        }
     }
 }

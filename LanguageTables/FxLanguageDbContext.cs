@@ -11,7 +11,14 @@ namespace LanguageTables
         private string tableSuffix;
         public FxLanguageDbContext(string culture)
         {
-            this.tableSuffix = culture;
+            if(culture == "dx") // for default use 
+            {
+                this.tableSuffix = "";
+            }
+            else
+            {
+                this.tableSuffix = "_" + culture;
+            }
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -19,9 +26,14 @@ namespace LanguageTables
             base.OnModelCreating(modelBuilder);
 
             // setting up the language parameters
-            string tableName = "Employee_" + this.tableSuffix;
-            modelBuilder.Entity<EmployeeLanguageModel>().ToTable(tableName)
-                .HasKey("Id");
+            string tableName = "Employee" + this.tableSuffix;
+            modelBuilder.Entity<EmployeeLanguageModel>( t =>
+            {
+                t.ToTable(tableName);
+                t.HasKey("Id");
+                t.Property("Name").HasColumnName("Name");
+            });
+                
 
             modelBuilder.Entity<TEntity>()
                 .HasOne(typeof(EmployeeLanguageModel), "Language")
